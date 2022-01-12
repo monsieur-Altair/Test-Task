@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4b333b159d4c4cbdb9de32b02bb04f, type: 3}
   m_Name: Assault rifle
   m_EditorClassIdentifier: 
-  damage: 0.8
+  damage: 6
   rapidity: 5
   range: 10
-  dispersion: 2
+  dispersion: 8
   cooldown: 1.5
   clip: 20
-  speed: 400
+  speed: 600

@@ -58,9 +58,9 @@ namespace Managers
         
         private void Firing()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
-                _player.Fire();
+                _player.Shoot();
             }
         }
 
@@ -73,7 +73,9 @@ namespace Managers
 
         private void CheckKeySwitchWeapon(string keyName, int weaponIndex)
         {
-            if (Input.GetKeyDown(keyName) && _weaponManager.CurrentIndex != weaponIndex)
+            if (Input.GetKeyDown(keyName) && 
+                _weaponManager.CurrentIndex != weaponIndex && 
+                _player.CurrentWeapon.IsOnCooldown == false)
             {
                 _weaponManager.SwitchWeapon(weaponIndex);
             }

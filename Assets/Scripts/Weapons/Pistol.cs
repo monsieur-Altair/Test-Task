@@ -4,7 +4,7 @@ namespace Weapons
 {
     public class Pistol : BaseWeapon
     {
-        protected override void Fire()
+        protected override void Shoot()
         {
             foreach (var point in spawnPoints)
             {

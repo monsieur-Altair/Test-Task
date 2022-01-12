@@ -15,7 +15,7 @@ MonoBehaviour:
   damage: 4
   rapidity: 1
   range: 10
-  dispersion: 1
+  dispersion: 7
   cooldown: 1.5
   clip: 10
-  speed: 400
+  speed: 600

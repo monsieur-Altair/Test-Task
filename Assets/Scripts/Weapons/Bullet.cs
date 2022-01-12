@@ -6,7 +6,7 @@ namespace Weapons
 {
     public class Bullet : MonoBehaviour
     {
-        private float _damage;
+        public float Damage { get; private set; }
         private float _range;
         private Vector3 _startPosition;
         private Rigidbody _rigidbody;
@@ -27,7 +27,7 @@ namespace Weapons
 
         public void SetParameters(float damage, float range, Vector3 startPos)
         {
-            _damage = damage;
+            Damage = damage;
             _range = range;
             _startPosition = startPos;
         }
@@ -43,9 +43,13 @@ namespace Weapons
 
         private void DestroyBullet()
         {
+            gameObject.SetActive(false);
+        }
+
+        private void OnDisable()
+        {
             _rigidbody.velocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
-            gameObject.SetActive(false);
         }
 
         public void Launch(Vector3 direction)

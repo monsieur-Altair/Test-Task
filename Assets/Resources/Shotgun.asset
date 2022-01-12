@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4b333b159d4c4cbdb9de32b02bb04f, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 25
   rapidity: 1
   range: 5
-  dispersion: 4
+  dispersion: 10
   cooldown: 3
   clip: 2
   speed: 600

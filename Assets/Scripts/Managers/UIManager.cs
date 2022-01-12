@@ -33,7 +33,7 @@ namespace Managers
 
         private void DisplayHp()
         {
-            hpText.text = "HP: " +_player.Hp;
+            hpText.text = "HP: " + (int)_player.Hp;
         }
 
         private void DisplayBulletCount()
