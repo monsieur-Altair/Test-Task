@@ -8,6 +8,7 @@ namespace Weapons
     {
         public float ElectricDamage { get; private set; }
         public int ElectricHitCount { get; private set; }
+        public float HitsDuration { get; private set; }
         protected override void Shoot()
         {
             foreach (var point in spawnPoints)
@@ -16,7 +17,7 @@ namespace Weapons
                 var bullet = ObjectPool.GetObject(Type.ElectricGun, startPosition, Quaternion.identity)
                     .GetComponent<ElectricBullet>();
                 var bulletDirection = CalculateStartDirection();
-                bullet.SetParameters(Damage, Range, startPosition, ElectricDamage, ElectricHitCount);
+                bullet.SetParameters(Damage, Range, startPosition, ElectricDamage, ElectricHitCount, HitsDuration);
                 bullet.Launch(bulletDirection);
                 bullet.Attacking += StartAttacking;
                 CurrentBulletCount--;
@@ -40,6 +41,7 @@ namespace Weapons
 
             ElectricDamage = electricResource.electricDamage;
             ElectricHitCount = electricResource.electricHitCount;
+            HitsDuration = electricResource.hitsDuration;
         }
         
         

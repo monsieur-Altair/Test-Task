@@ -9,15 +9,24 @@ namespace Weapons
     {
         public float ElectricDamage { get; private set; }
         public int ElectricHitCount { get; private set; }
+        public float HitsDuration { get; private set; }
 
-        private const float HitPause = 0.3f;
+
+        private float _hitPause;
         private BaseCharacter _hittedBaseCharacter;
         public event Action<ElectricBullet> Attacking;
-        public void SetParameters(float damage, float range, Vector3 startPos, float electricDamage, int hitCount)
+        public void SetParameters(float damage, 
+            float range, 
+            Vector3 startPos, 
+            float electricDamage, 
+            int hitCount,
+            float hitsDuration)
         {
             base.SetParameters(damage,range,startPos);
             ElectricDamage = electricDamage;
             ElectricHitCount = hitCount;
+            HitsDuration = hitsDuration;
+            _hitPause = HitsDuration / ElectricHitCount;
         }
 
         public override void ApplyDamage(BaseCharacter baseCharacter)
@@ -40,7 +49,7 @@ namespace Weapons
             {
                 if(_hittedBaseCharacter.IsAlive==false)
                     yield break;
-                yield return new WaitForSeconds(HitPause);
+                yield return new WaitForSeconds(_hitPause);
                 _hittedBaseCharacter.ReceiveDamage(damageByHit);
             }
         }

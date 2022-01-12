@@ -7,5 +7,6 @@ namespace Weapon_resources
     {
         public float electricDamage; //additional damage by electricity
         public int electricHitCount; //hit count after main damage
+        public float hitsDuration;    //in seconds
     }
 }
