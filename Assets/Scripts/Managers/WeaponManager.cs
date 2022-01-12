@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Characters;
+using Exceptions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Type = Weapons.Type;
@@ -13,10 +16,9 @@ namespace Managers
         [SerializeField] private List<Resources.Weapon> weaponResources;
         [SerializeField] private List<GameObject> weaponsPrefab;
         [SerializeField] private GameObject player;
-        
+        public Character _mainCharacter;// ///////////////////////////////
+        public int WeaponsCount { get; private set; }
         private readonly Vector3 _offset = new Vector3(0.6f, 1.5f, 0.35f);
-        public int CurrentIndex { get; private set; }
-        public List<Weapons.BaseWeapon> WeaponsList { get; private set; }
 
         private void Awake()
         {
@@ -24,28 +26,45 @@ namespace Managers
             {
                 Instance = this;
             }
+            WeaponsCount = weaponsPrefab.Count;
         }
 
         private void Start()
         {
-            WeaponsList = new List<Weapons.BaseWeapon>();
-            foreach (var prefab in weaponsPrefab)
+            //WeaponsList = new List<Weapons.BaseWeapon>();
+            _mainCharacter = player.GetComponent<Character>();
+            if (_mainCharacter == null)
             {
-                var weapon = CreateWeapon(prefab);
-                var type = (int) weapon.GunType;
-                weapon.Initialize(weaponResources[type]);
-                weapon.gameObject.transform.parent = player.transform;//////////////////////////////////////////////
-                weapon.gameObject.transform.position = _offset;/////////////////////////////////////////////////////
-                player.GetComponent<Player>().Cooldown+=weapon.CooldownTheWeapon;
-                WeaponsList.Add(weapon);
-                weapon.gameObject.SetActive(false);
+                throw new GameException("cannot get character component");
             }
 
-            var index = Random.Range(0, weaponsPrefab.Count - 1);
-            SwitchWeapon(index);
+           
+            PrepareMainCharacter();
         }
 
-        private Weapons.BaseWeapon CreateWeapon(GameObject prefab)
+        private void PrepareMainCharacter()
+        {
+            for (var prefabIndex=0;prefabIndex<weaponsPrefab.Count;prefabIndex++)
+            {
+                AddWeaponToCharacter(prefabIndex,_mainCharacter);
+            }
+            var index = Random.Range(0, weaponsPrefab.Count - 1);
+            SwitchWeapon(index, _mainCharacter);
+        }
+
+        public void AddWeaponToCharacter(int prefabIndex, Character character)
+        {
+            var weapon = CreateWeapon(weaponsPrefab[prefabIndex]);
+            var type = (int) weapon.GunType;
+            weapon.Initialize(weaponResources[type], character.GetRawDirection);
+            weapon.gameObject.transform.parent = character.transform;//////////////////////////////////////////////
+            weapon.gameObject.transform.position = character.transform.position + _offset;/////////////////////////////////////////////////////
+            character.Cooldown+=weapon.CooldownTheWeapon;
+            character.WeaponsList.Add(weapon);
+            weapon.gameObject.SetActive(false);
+        }
+
+        private static Weapons.BaseWeapon CreateWeapon(GameObject prefab)
         {
             var weapon = Instantiate(prefab);
             var type = weapon.GetComponent<Weapons.BaseWeapon>().GunType;
@@ -55,17 +74,17 @@ namespace Managers
                 Type.Pistol => weapon.GetComponent<Weapons.Pistol>(),
                 Type.Shotgun => weapon.GetComponent<Weapons.Shotgun>(),
                 Type.AssaultRifle => weapon.GetComponent<Weapons.AssaultRifle>(),
+                Type.ElectricGun => weapon.GetComponent<Weapons.ElectricGun>(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
         
-        public void SwitchWeapon(int index)
+        public static void SwitchWeapon(int index, Character character)
         {
-            var newWeapon = WeaponsList[index];
-            WeaponsList[CurrentIndex].gameObject.SetActive(false);
+            var newWeapon = character.WeaponsList[index];
+            character.WeaponsList[character.CurrentIndex].gameObject.SetActive(false);
             newWeapon.gameObject.SetActive(true);
-            CurrentIndex = index;
-            player.GetComponent<Player>().SetWeapon(newWeapon);
+            character.SetCurrentWeapon(newWeapon,index);
         }
     }
 }

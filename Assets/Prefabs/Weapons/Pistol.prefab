@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 7.999998, y: 8, z: 1.9999995}
   m_Children: []
   m_Father: {fileID: 853642580233552037}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4958683010121008239
 GameObject:
@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 4360019164912048673}
   - component: {fileID: 4672205496695341612}
   - component: {fileID: 2857452301060950077}
-  - component: {fileID: 1144665104860233515}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -61,7 +60,7 @@ Transform:
   m_LocalScale: {x: 0.13252479, y: 0.10996968, z: 0.125}
   m_Children: []
   m_Father: {fileID: 853642580233552037}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &4672205496695341612
 MeshFilter:
@@ -112,19 +111,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1144665104860233515
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4958683010121008239}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6471102593213108205
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +122,6 @@ GameObject:
   - component: {fileID: 2968946302799510273}
   - component: {fileID: 1271492460055897753}
   - component: {fileID: 6285669177546087877}
-  - component: {fileID: 6891016014109882126}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -207,19 +192,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6891016014109882126
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6471102593213108205}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7657650390140039014
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,8 +221,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2968946302799510273}
-  - {fileID: 2157400745675823026}
   - {fileID: 4360019164912048673}
+  - {fileID: 2157400745675823026}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

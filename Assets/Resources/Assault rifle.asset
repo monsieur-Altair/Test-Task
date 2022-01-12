@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 6
   rapidity: 5
-  range: 10
-  dispersion: 8
+  range: 20
+  dispersion: 4
   cooldown: 1.5
   clip: 20
   speed: 600

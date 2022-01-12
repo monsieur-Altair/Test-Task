@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random=UnityEngine.Random;
@@ -10,7 +9,8 @@ namespace Weapons
     {
         Pistol,
         Shotgun,
-        AssaultRifle
+        AssaultRifle,
+        ElectricGun
     }
     
     
@@ -29,6 +29,10 @@ namespace Weapons
         
         [SerializeField] private Type gunType;
         [SerializeField] protected List<GameObject> spawnPoints;
+
+        public delegate Vector3 CalcDirFunc(Vector3 weaponDirection);
+
+        private CalcDirFunc _getRawDirection;
         public Type GunType { get; private set; }
 
         protected abstract void Shoot();
@@ -43,7 +47,12 @@ namespace Weapons
            // Debug.Log(GunType);
         }
 
-        public void Initialize(Resources.Weapon resource)
+        private void OnDisable()
+        {
+            _isShooted = false;
+        }
+
+        public virtual void Initialize(Resources.Weapon resource, CalcDirFunc func)
         {
             Damage = resource.damage;
             Rapidity = resource.rapidity;
@@ -58,6 +67,8 @@ namespace Weapons
             IsOnCooldown = false;
             _isShooted = false;
             _fireDuration = 1.0f / Rapidity;
+
+            _getRawDirection = func;
         }
 
         public void StartShooting()
@@ -81,7 +92,10 @@ namespace Weapons
         {
             var offsetY = Random.Range(0.0f, Dispersion / DispersionGap);
             var offsetX = Random.Range(0.0f, Dispersion / DispersionGap);
-            var startDirection = Vector3.forward + Vector3.right * offsetX + Vector3.up * offsetY;
+            
+            var startDirection = _getRawDirection(transform.position);
+
+            startDirection+= Vector3.right * offsetX + Vector3.up * offsetY;;
             return startDirection * Speed;
         }
         

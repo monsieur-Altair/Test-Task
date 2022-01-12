@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Characters;
 using Exceptions;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ namespace Managers
         [SerializeField] private float mouseSensitivity;
         [SerializeField] private GameObject player;
         private Transform _playerTransform;
-        private Player _player;
+        private Character _mainCharacter;
         private float _xRotation;
         private const float MAXRotationAngle=90.0f; 
         private const float MINRotationAngle=-90.0f;
@@ -20,16 +20,16 @@ namespace Managers
         private CharacterController _characterController;
         [SerializeField] private float velocity;
         
-        private WeaponManager _weaponManager;
-        
         private const string PistolKey = "1";
         private const string ShotgunKey = "2";
         private const string AssaultRifleKey = "3";
+        private const string ElectricGunKey = "4";
         private const string CooldownKey = "r";
 
         private int _pistolIndex;
         private int _shotgunIndex;
         private int _assaultRifleIndex;
+        private int _electricGunIndex;
         
         private void Start()
         {
@@ -38,7 +38,6 @@ namespace Managers
             GetWeaponInformation();
         }
 
-        // Update is called once per frame
         private void Update()
         {
             SwitchingWeapons();
@@ -50,9 +49,9 @@ namespace Managers
 
         private void CheckCooldown()
         {
-            if (Input.GetKeyDown(CooldownKey)&&_player.CurrentWeapon.IsOnCooldown==false)
+            if (Input.GetKeyDown(CooldownKey)&&_mainCharacter.CurrentWeapon.IsOnCooldown==false)
             {
-                _player.StartCooldown();
+                _mainCharacter.StartCooldown();
             }
         }
         
@@ -60,7 +59,7 @@ namespace Managers
         {
             if (Input.GetMouseButton(0))
             {
-                _player.Shoot();
+                _mainCharacter.Shoot();
             }
         }
 
@@ -69,15 +68,16 @@ namespace Managers
             CheckKeySwitchWeapon(PistolKey,_pistolIndex);
             CheckKeySwitchWeapon(ShotgunKey,_shotgunIndex);
             CheckKeySwitchWeapon(AssaultRifleKey,_assaultRifleIndex);
+            CheckKeySwitchWeapon(ElectricGunKey,_electricGunIndex);
         }
 
         private void CheckKeySwitchWeapon(string keyName, int weaponIndex)
         {
             if (Input.GetKeyDown(keyName) && 
-                _weaponManager.CurrentIndex != weaponIndex && 
-                _player.CurrentWeapon.IsOnCooldown == false)
+                _mainCharacter.CurrentIndex != weaponIndex && 
+                _mainCharacter.CurrentWeapon.IsOnCooldown == false)
             {
-                _weaponManager.SwitchWeapon(weaponIndex);
+                WeaponManager.SwitchWeapon(weaponIndex, _mainCharacter);
             }
         }
         
@@ -89,7 +89,6 @@ namespace Managers
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, MINRotationAngle, MAXRotationAngle);
         
-            //transform.localRotation=Quaternion.Euler(_xRotation,0,0);
             _cameraTransform.localEulerAngles = Vector3.right * _xRotation;
             _playerTransform.Rotate(Vector3.up*mouseX);
         }
@@ -98,8 +97,7 @@ namespace Managers
         {
             var x = Input.GetAxis("Horizontal");
             var z = Input.GetAxis("Vertical");
-            var moveDirection = Vector3.forward * z + Vector3.right * x;
-            moveDirection = _playerTransform.TransformDirection(moveDirection);
+            var moveDirection = _playerTransform.TransformDirection(Vector3.forward * z + Vector3.right * x);
             _characterController.Move(moveDirection * Time.deltaTime * velocity);
         }
 
@@ -110,8 +108,8 @@ namespace Managers
                 throw new GameException("cannot get players game object");
             }
             _playerTransform = player.transform;
-            _player = player.GetComponent<Player>();
-            if (_player == null)
+            _mainCharacter = player.GetComponent<Character>();
+            if (_mainCharacter == null)
             {
                 throw new GameException("cannot get players component");
             }
@@ -139,10 +137,10 @@ namespace Managers
 
         private void GetWeaponInformation()
         {
-            _weaponManager=WeaponManager.Instance;
             _pistolIndex = (int) Weapons.Type.Pistol;
             _shotgunIndex = (int) Weapons.Type.Shotgun;
             _assaultRifleIndex = (int) Weapons.Type.AssaultRifle;
+            _electricGunIndex = (int) Weapons.Type.ElectricGun;
         }
     }
 }

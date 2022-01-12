@@ -20,7 +20,7 @@ namespace Weapons
             }
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _range=float.PositiveInfinity;
         }
@@ -46,6 +46,12 @@ namespace Weapons
             gameObject.SetActive(false);
         }
 
+        public virtual void ApplyDamage(Characters.Character character)
+        {
+            character.ReceiveDamage(Damage);
+            gameObject.SetActive(false);
+        }
+
         private void OnDisable()
         {
             _rigidbody.velocity = Vector3.zero;
@@ -56,8 +62,6 @@ namespace Weapons
         {
             _rigidbody.AddForce(direction);
         }
-        
-        
         
     }
 }

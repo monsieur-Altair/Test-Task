@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Characters;
 using Exceptions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,17 +13,17 @@ namespace Managers
         [SerializeField] private Text cooldownText;
         [SerializeField] private Text bulletText;
         [SerializeField] private GameObject player;
-        private Player _player;
+        private Character _character;
 
         private void Start()
         {
-            _player = player.GetComponent<Player>();
-            if (_player == null)
+            _character = player.GetComponent<Character>();
+            if (_character == null)
             {
                 throw new GameException("cannot get player component");
             }
             cooldownText.gameObject.SetActive(false);
-            _player.Cooldown += DisplayCooldownText;
+            _character.Cooldown += DisplayCooldownText;
         }
 
         private void LateUpdate()
@@ -33,17 +34,17 @@ namespace Managers
 
         private void DisplayHp()
         {
-            hpText.text = "HP: " + (int)_player.Hp;
+            hpText.text = "HP: " + (int)_character.Hp;
         }
 
         private void DisplayBulletCount()
         {
-            bulletText.text = _player.CurrentWeapon.CurrentBulletCount + "/" +_player.CurrentWeapon.Clip;
+            bulletText.text = _character.CurrentWeapon.CurrentBulletCount + "/" +_character.CurrentWeapon.Clip;
         }
 
         private void DisplayCooldownText()
         {
-            var time = _player.CurrentWeapon.Cooldown;
+            var time = _character.CurrentWeapon.Cooldown;
             StartCoroutine(DisplaySeconds(time));
         }
 

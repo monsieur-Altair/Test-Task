@@ -9,13 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d4b333b159d4c4cbdb9de32b02bb04f, type: 3}
-  m_Name: Shotgun
+  m_Script: {fileID: 11500000, guid: d694c133bb7f4b7b817d803bc5f00a94, type: 3}
+  m_Name: Electric gun
   m_EditorClassIdentifier: 
-  damage: 25
-  rapidity: 1
-  range: 10
-  dispersion: 10
+  damage: 20
+  rapidity: 0.5
+  range: 40
+  dispersion: 2
   cooldown: 3
   clip: 2
-  speed: 600
+  speed: 800
+  electricDamage: 40
+  electricHitCount: 5
