@@ -27,7 +27,6 @@ namespace Managers
 
         public void Start()
         {
-            //Debug.Log("start pool");
             foreach (var pool in pools)
             {
                 Queue<GameObject> objectPool = new Queue<GameObject>(); 

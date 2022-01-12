@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Characters;
 using Exceptions;
 using UnityEngine;
+using Weapon_resources;
 using Random = UnityEngine.Random;
 using Type = Weapons.Type;
 
@@ -13,10 +13,10 @@ namespace Managers
     {
         public static WeaponManager Instance { get; private set; }
 
-        [SerializeField] private List<Resources.Weapon> weaponResources;
+        [SerializeField] private List<Weapon> weaponResources;
         [SerializeField] private List<GameObject> weaponsPrefab;
         [SerializeField] private GameObject player;
-        public Character _mainCharacter;// ///////////////////////////////
+        public BaseCharacter MainCharacter { get; private set; }
         public int WeaponsCount { get; private set; }
         private readonly Vector3 _offset = new Vector3(0.6f, 1.5f, 0.35f);
 
@@ -31,14 +31,11 @@ namespace Managers
 
         private void Start()
         {
-            //WeaponsList = new List<Weapons.BaseWeapon>();
-            _mainCharacter = player.GetComponent<Character>();
-            if (_mainCharacter == null)
+            MainCharacter = player.GetComponent<BaseCharacter>();
+            if (MainCharacter == null)
             {
                 throw new GameException("cannot get character component");
             }
-
-           
             PrepareMainCharacter();
         }
 
@@ -46,19 +43,21 @@ namespace Managers
         {
             for (var prefabIndex=0;prefabIndex<weaponsPrefab.Count;prefabIndex++)
             {
-                AddWeaponToCharacter(prefabIndex,_mainCharacter);
+                AddWeaponToCharacter(prefabIndex,MainCharacter);
             }
             var index = Random.Range(0, weaponsPrefab.Count - 1);
-            SwitchWeapon(index, _mainCharacter);
+            SwitchWeapon(index, MainCharacter);
         }
 
-        public void AddWeaponToCharacter(int prefabIndex, Character character)
+        public void AddWeaponToCharacter(int prefabIndex, BaseCharacter character)
         {
             var weapon = CreateWeapon(weaponsPrefab[prefabIndex]);
             var type = (int) weapon.GunType;
             weapon.Initialize(weaponResources[type], character.GetRawDirection);
-            weapon.gameObject.transform.parent = character.transform;//////////////////////////////////////////////
-            weapon.gameObject.transform.position = character.transform.position + _offset;/////////////////////////////////////////////////////
+            var weaponTransform=weapon.gameObject.transform;
+            var characterTransform = character.transform;
+            weaponTransform.parent = characterTransform;
+            weaponTransform.position = characterTransform.position + _offset;
             character.Cooldown+=weapon.CooldownTheWeapon;
             character.WeaponsList.Add(weapon);
             weapon.gameObject.SetActive(false);
@@ -68,7 +67,7 @@ namespace Managers
         {
             var weapon = Instantiate(prefab);
             var type = weapon.GetComponent<Weapons.BaseWeapon>().GunType;
-//            Debug.Log("type = "+type);
+            
             return type switch
             {
                 Type.Pistol => weapon.GetComponent<Weapons.Pistol>(),
@@ -79,7 +78,7 @@ namespace Managers
             };
         }
         
-        public static void SwitchWeapon(int index, Character character)
+        public static void SwitchWeapon(int index, BaseCharacter character)
         {
             var newWeapon = character.WeaponsList[index];
             character.WeaponsList[character.CurrentIndex].gameObject.SetActive(false);

@@ -1,5 +1,6 @@
 ﻿using Exceptions;
 using UnityEngine;
+using Weapon_resources;
 
 namespace Weapons
 {
@@ -28,10 +29,10 @@ namespace Weapons
             bullet.Attacking -= StartAttacking;
         }
         
-        public override void Initialize(Resources.Weapon resource, CalcDirFunc func)
+        public override void Initialize(Weapon resource, CalcDirFunc func)
         {
             base.Initialize(resource, func);
-            var electricResource = resource as Resources.ElectricWeapon;
+            var electricResource = resource as ElectricWeapon;
             if (electricResource == null)
             {
                 throw new GameException("cannot get electric resources");

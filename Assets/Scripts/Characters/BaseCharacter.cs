@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Characters
 {
-    public class Character : MonoBehaviour
+    public class BaseCharacter : MonoBehaviour
     {
         public float Hp { get; private set; }
         public Weapons.BaseWeapon CurrentWeapon { get; private set; }
@@ -17,7 +17,8 @@ namespace Characters
         public List<Weapons.BaseWeapon> WeaponsList { get; private set; }
         public int CurrentIndex { get; private set; }
 
-
+        private Transform _cameraTransform;
+        private const float MaxHp = 100.0f;
 
         private void Awake()
         {
@@ -26,15 +27,20 @@ namespace Characters
             {
                 throw new GameException("cannot get character material");
             }
-
+            
             WeaponsList = new List<Weapons.BaseWeapon>();
         }
 
         private void Start()
         {
             IsAlive = true;
-            Hp = 100.0f;
+            Hp = MaxHp;
             CurrentIndex = 0;
+            _cameraTransform = Camera.main.transform;
+            if (_cameraTransform==null)
+            {
+                throw new GameException("cannot get camera transform component");
+            }
         }
 
         public void SetCurrentWeapon(Weapons.BaseWeapon weapon, int index)
@@ -43,27 +49,18 @@ namespace Characters
             CurrentWeapon = weapon;
         }
 
-        public void Shoot()
-        {
-            CurrentWeapon.StartShooting();
-        }
-
-        public void StartCooldown()
-        {
-            OnCooldown();
-        }
-
-        private void OnCooldown()
-        {
-            Cooldown?.Invoke();
-        }
+        public void Shoot() => CurrentWeapon.StartShooting();
+        
+        public void StartCooldown() => OnCooldown();
+        
+        private void OnCooldown() => Cooldown?.Invoke();
 
         private void OnTriggerEnter(Collider other)
         {
             if (IsAlive == false)
                 return;
 
-            var bullet = other.GetComponent<Weapons.Bullet>();
+            var bullet = other.GetComponent<Weapons.BaseBullet>();
             if (bullet == null)
             {
                 throw new GameException("cannot get bullet component");
@@ -95,11 +92,12 @@ namespace Characters
             gameObject.SetActive(false);
         }
     
+        //calculate bullet direction for player
         public virtual Vector3 GetRawDirection(Vector3 weaponPosition)
         {
             var rawDirection =  transform.TransformDirection(Vector3.forward);
-            var cameraTransform = Camera.main.transform;
-            if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out var hitInfo, 100.0f))
+            
+            if (Physics.Raycast(_cameraTransform.position, _cameraTransform.forward, out var hitInfo, 100.0f))
             {
                 rawDirection = (hitInfo.point-weaponPosition).normalized;
                 rawDirection.y = 0.0f;
@@ -111,7 +109,7 @@ namespace Characters
         public void ReceiveDamage(float damage)
         {
             Hp -= damage;
-            var colorDamage = 2.0f * damage/100.0f;//depend on start color
+            var colorDamage = 2.0f * damage/MaxHp;//depend on start color
             ChangeColor(colorDamage);
             if (Hp <= 0)
                 StartCoroutine(DeleteCharacter());

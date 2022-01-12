@@ -4,20 +4,17 @@ using Random = UnityEngine.Random;
 
 namespace Characters
 {
-    public class Enemy : Character
+    public class Enemy : BaseCharacter
     {
-        private Character _aim;
+        private BaseCharacter _aim;
         private Transform _aimTransform;
 
-        private const float MINTime=2.0f;
-        private const float MAXTime=5.0f;
+        private const float MINTime = 2.0f;
+        private const float MAXTime = 5.0f;
 
-        private void Update()
-        {
-            transform.LookAt(_aimTransform);
-        }
-    
-        public void SetAim(Character character)
+        private void Update() => transform.LookAt(_aimTransform);
+
+        public void SetAim(BaseCharacter character)
         {
             _aim = character;
             _aimTransform = _aim.transform;
@@ -41,6 +38,7 @@ namespace Characters
             }
         }
     
+        //calculate bullet direction for AI(enemies)
         public override Vector3 GetRawDirection(Vector3 weaponPosition)
         {
             var rawDirection = (_aim.transform.position - weaponPosition).normalized;

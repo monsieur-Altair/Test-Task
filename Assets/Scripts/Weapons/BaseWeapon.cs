@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Weapon_resources;
 using Random=UnityEngine.Random;
 
 namespace Weapons
@@ -41,18 +42,12 @@ namespace Weapons
         private float _fireDuration;
         private bool _isShooted;
         private const float DispersionGap = 100.0f;
-        private void Awake()
-        {
-            GunType = gunType;
-           // Debug.Log(GunType);
-        }
+        
+        private void Awake() => GunType = gunType;
 
-        private void OnDisable()
-        {
-            _isShooted = false;
-        }
-
-        public virtual void Initialize(Resources.Weapon resource, CalcDirFunc func)
+        private void OnDisable() => _isShooted = false;
+        
+        public virtual void Initialize(Weapon resource, CalcDirFunc func)
         {
             Damage = resource.damage;
             Rapidity = resource.rapidity;

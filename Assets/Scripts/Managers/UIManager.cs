@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Characters;
 using Exceptions;
 using UnityEngine;
@@ -13,11 +12,11 @@ namespace Managers
         [SerializeField] private Text cooldownText;
         [SerializeField] private Text bulletText;
         [SerializeField] private GameObject player;
-        private Character _character;
+        private BaseCharacter _character;
 
         private void Start()
         {
-            _character = player.GetComponent<Character>();
+            _character = player.GetComponent<BaseCharacter>();
             if (_character == null)
             {
                 throw new GameException("cannot get player component");

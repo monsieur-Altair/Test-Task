@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Weapons
 {
-    public class ElectricBullet : Bullet
+    public class ElectricBullet : BaseBullet
     {
         public float ElectricDamage { get; private set; }
         public int ElectricHitCount { get; private set; }
 
         private const float HitPause = 0.3f;
-        private Character _hittedCharacter;
+        private BaseCharacter _hittedBaseCharacter;
         public event Action<ElectricBullet> Attacking;
         public void SetParameters(float damage, float range, Vector3 startPos, float electricDamage, int hitCount)
         {
@@ -20,18 +20,17 @@ namespace Weapons
             ElectricHitCount = hitCount;
         }
 
-        public override void ApplyDamage(Character character)
+        public override void ApplyDamage(BaseCharacter baseCharacter)
         {
-            _hittedCharacter = character;
-            //StartCoroutine(AttackedByElectricity());
-            base.ApplyDamage(character);
+            _hittedBaseCharacter = baseCharacter;
+            base.ApplyDamage(baseCharacter);
             OnAttacking();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            _hittedCharacter = null;
+            _hittedBaseCharacter = null;
         }
 
         public IEnumerator AttackedByElectricity()
@@ -39,16 +38,13 @@ namespace Weapons
             var damageByHit = ElectricDamage / ElectricHitCount;
             for (var i = 0; i < ElectricHitCount; i++)
             {
-                if(_hittedCharacter.IsAlive==false)
+                if(_hittedBaseCharacter.IsAlive==false)
                     yield break;
                 yield return new WaitForSeconds(HitPause);
-                _hittedCharacter.ReceiveDamage(damageByHit);
+                _hittedBaseCharacter.ReceiveDamage(damageByHit);
             }
         }
 
-        protected virtual void OnAttacking()
-        {
-            Attacking?.Invoke(this);
-        }
+        protected virtual void OnAttacking() => Attacking?.Invoke(this);
     }
 }

@@ -196,7 +196,6 @@ MonoBehaviour:
   - {fileID: 3009993120484461736, guid: d69315772ec20714caae9386c41686ca, type: 3}
   - {fileID: 2530507568106496385, guid: bf7be83c90dc7d944bd97f60ba4c6cec, type: 3}
   player: {fileID: 2115025332}
-  _mainCharacter: {fileID: 0}
 --- !u!114 &29131857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,6 +218,9 @@ MonoBehaviour:
   - type: 2
     prefab: {fileID: 1977633435928447355, guid: c7c12e5f8fcb3ae4e90d0f22f34d9200, type: 3}
     size: 50
+  - type: 3
+    prefab: {fileID: 1977633435928447355, guid: 4890e3334e528e743aa41f152f685d4e, type: 3}
+    size: 4
 --- !u!114 &29131858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1834,8 +1836,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2115025333}
   - component: {fileID: 2115025334}
-  - component: {fileID: 2115025335}
   - component: {fileID: 2115025336}
+  - component: {fileID: 2115025335}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged

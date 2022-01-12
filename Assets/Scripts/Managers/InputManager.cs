@@ -9,10 +9,11 @@ namespace Managers
         [SerializeField] private float mouseSensitivity;
         [SerializeField] private GameObject player;
         private Transform _playerTransform;
-        private Character _mainCharacter;
+        private BaseCharacter _mainBaseCharacter;
         private float _xRotation;
         private const float MAXRotationAngle=90.0f; 
         private const float MINRotationAngle=-90.0f;
+        private const float VerticalMouseSensitivity=1.5f;
         
         private Camera _mainCamera;
         private Transform _cameraTransform;
@@ -49,9 +50,9 @@ namespace Managers
 
         private void CheckCooldown()
         {
-            if (Input.GetKeyDown(CooldownKey)&&_mainCharacter.CurrentWeapon.IsOnCooldown==false)
+            if (Input.GetKeyDown(CooldownKey)&&_mainBaseCharacter.CurrentWeapon.IsOnCooldown==false)
             {
-                _mainCharacter.StartCooldown();
+                _mainBaseCharacter.StartCooldown();
             }
         }
         
@@ -59,7 +60,7 @@ namespace Managers
         {
             if (Input.GetMouseButton(0))
             {
-                _mainCharacter.Shoot();
+                _mainBaseCharacter.Shoot();
             }
         }
 
@@ -74,17 +75,17 @@ namespace Managers
         private void CheckKeySwitchWeapon(string keyName, int weaponIndex)
         {
             if (Input.GetKeyDown(keyName) && 
-                _mainCharacter.CurrentIndex != weaponIndex && 
-                _mainCharacter.CurrentWeapon.IsOnCooldown == false)
+                _mainBaseCharacter.CurrentIndex != weaponIndex && 
+                _mainBaseCharacter.CurrentWeapon.IsOnCooldown == false)
             {
-                WeaponManager.SwitchWeapon(weaponIndex, _mainCharacter);
+                WeaponManager.SwitchWeapon(weaponIndex, _mainBaseCharacter);
             }
         }
         
         private void MoveCamera()
         {
             var mouseX = Input.GetAxis("Mouse X")*mouseSensitivity*Time.deltaTime;
-            var mouseY = Input.GetAxis("Mouse Y")*mouseSensitivity*Time.deltaTime/1.5f;
+            var mouseY = Input.GetAxis("Mouse Y")*mouseSensitivity*Time.deltaTime/VerticalMouseSensitivity;
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, MINRotationAngle, MAXRotationAngle);
@@ -108,8 +109,8 @@ namespace Managers
                 throw new GameException("cannot get players game object");
             }
             _playerTransform = player.transform;
-            _mainCharacter = player.GetComponent<Character>();
-            if (_mainCharacter == null)
+            _mainBaseCharacter = player.GetComponent<BaseCharacter>();
+            if (_mainBaseCharacter == null)
             {
                 throw new GameException("cannot get players component");
             }

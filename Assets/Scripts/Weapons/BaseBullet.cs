@@ -1,10 +1,9 @@
-﻿using System;
-using Exceptions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Weapons
 {
-    public class Bullet : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody))]
+    public class BaseBullet : MonoBehaviour
     {
         public float Damage { get; private set; }
         private float _range;
@@ -14,10 +13,10 @@ namespace Weapons
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            if (_rigidbody == null)
+            /*if (_rigidbody == null)
             {
                 throw new GameException("cannot get bullet rigidbody component");
-            }
+            }*/
         }
 
         protected virtual void OnEnable()
@@ -46,9 +45,9 @@ namespace Weapons
             gameObject.SetActive(false);
         }
 
-        public virtual void ApplyDamage(Characters.Character character)
+        public virtual void ApplyDamage(Characters.BaseCharacter baseCharacter)
         {
-            character.ReceiveDamage(Damage);
+            baseCharacter.ReceiveDamage(Damage);
             gameObject.SetActive(false);
         }
 
@@ -58,10 +57,8 @@ namespace Weapons
             _rigidbody.angularVelocity = Vector3.zero;
         }
 
-        public void Launch(Vector3 direction)
-        {
-            _rigidbody.AddForce(direction);
-        }
+        public void Launch(Vector3 direction) => _rigidbody.AddForce(direction);
+
         
     }
 }
